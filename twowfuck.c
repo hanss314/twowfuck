@@ -95,7 +95,7 @@ void interpret(const char * program, const char * args){
 
     SHA1_CTX sha;
     unsigned char digest[20];
-    long long dest;
+    unsigned long long dest;
 
     
 
@@ -123,8 +123,11 @@ void interpret(const char * program, const char * args){
             SHA1Init(&sha);
             SHA1Update(&sha, (const unsigned char*)&program[pptr], proglen-pptr);
             SHA1Final(digest, &sha);
-            digest[19] = 0;
-            dest = strtol((char*)digest, NULL, 16);
+            dest = 0;
+            for(int i=0; i<20; i++){
+                dest |= digest[i]; dest <<= 8;
+            }
+            printf("%lld\n", dest);
             dest %= proglen;
             pptr = dest-1;
         }
